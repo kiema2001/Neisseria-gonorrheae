@@ -1,15 +1,15 @@
 # Neisseria-gonorrheae
- downloading the data from website, we developed a data fetching script
-from Bio import Entrez
-import os
-import subprocess
-import xml.etree.ElementTree as ET
-import pandas as pd
+ #downloading the data from website, we developed a data fetching script
+>from Bio import Entrez
+>import os
+>import subprocess
+>import xml.etree.ElementTree as ET
+>import pandas as pd
 
- Email address to use NCBI Entrez
+# Email address to use NCBI Entrez
 Entrez.email = "henrykiema47@gmail.com"
 
- Function to fetch study (SRX) accession numbers for a given project
+# Function to fetch study (SRX) accession numbers for a given project
 (PRJNA) accession number
 def fetch_study_accessions(project_accession):
     search_result = Entrez.esearch(db="sra", term=project_accession,
@@ -17,7 +17,7 @@ retmax=1000)
     search_record = Entrez.read(search_result)
     return search_record['IdList']
 
- Function to fetch run (SRR) accession numbers and metadata for a
+# Function to fetch run (SRR) accession numbers and metadata for a
 given study (SRX) accession number
 def fetch_run_accessions_and_metadata(study_accession):
     fetch_result = Entrez.efetch(db="sra", id=study_accession,
@@ -48,7 +48,7 @@ run_info.find(".//Instrument") is not None else "",
 
     return run_accessions, metadata_list
 
- Function to download FASTQ data for a given run accession number
+# Function to download FASTQ data for a given run accession number
 using fasterq-dump
 def download_fastq(run_accession, output_dir="sequences"):
     if not os.path.exists(output_dir):
@@ -60,10 +60,10 @@ def download_fastq(run_accession, output_dir="sequences"):
     except subprocess.CalledProcessError:
         print(f"Failed to download FASTQ files for: {run_accession}")
 
- Define the project accession numbers
+# Define the project accession numbers
 project_accession_numbers = ["PRJNA481622", "PRJNA590515"]
 
- Fetch study accessions and run metadata for each project
+# Fetch study accessions and run metadata for each project
 all_metadata = []
 for project_accession in project_accession_numbers:
     print(f"Fetching study accessions for project {project_accession}...")
@@ -84,8 +84,8 @@ study {study_accession}.")
             print(f"Downloading FASTQ for run {run_accession}...")
             download_fastq(run_accession)
 
- Convert the list to a DataFrame
+# Convert the list to a DataFrame
 metadata_df = pd.DataFrame(all_metadata)
 
- Print the metadata DataFrame
-print(metadata_df)
+# Print the metadata DataFrame
+#print(metadata_df)
