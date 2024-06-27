@@ -23,7 +23,7 @@ Transmission is often the most understudied stage of infections and this is also
 Following transmission, N. gonorrhoeae establishes contact with the mucosal epithelium to replicate and ultimately transmit to new hosts. N. gonorrhoeae is primarily a mucosal colonizer, attaching to various epithelial surfaces. The bacteria uses pili to help them cause damage, once they attach on the surface of the host cells. These pili also help the bacteria to transfer genetic material, and also provides motility of the bacteria. The lipooligosaccharides in the cell wall of the bacteria stimulates an inflammatory response of the body, which causes most of the symptoms of the disease in humans.
 Type IV pili are outer membrane structures that are crucial for mediating initial cellular adherence, natural transformation competence, twitching motility and immune evasion through antigenic and phase variation35-39. Adherence to the epithelial surface and subsequent pilus retraction bring the gonococci close to the cell.
 When untreated gonorrhea can spread through the blood causing Disseminated Gonococcal Infection which is life threatening as it can cause arthritis.
-surface.https://www.ncbi.nlm.nih.gov/corecgi/tileshop/tileshop.fcgi?p=PMC3&id=180498&s=84&r=1&c= 
+
 
 
 ### Scattered fibrinous lesions in the pharynx and larynx
@@ -50,7 +50,9 @@ It’s also good to note that most of the pharyngeal gonorrhoeae are asymptomati
 Resistance to so many treatment options, including penicillin, sulphonamides, tetracycline, quinolones and macrolides (including azithromycin), as well as so-called last line options like cephalosporin, make N. gonorrhoeae a multidrug resistant organism.
 
 ## Problem statement
-Antimicrobial resistance poses a significant threat in the public health globally, as the spread of this AMR bacteria may lead to more challenges in the treatment of the disease cause by this bacteria.In Kenya, there has been limited genomics study that have been conducted regarding this threat of the increasing resistance of the AMR N. gonorrheae bacteria. A study which was done by [Kivata et al](https://ncbi.nlm.nih.gov/pmc/articles/PMC7517623/)
+Antimicrobial resistance poses a significant threat in the public health globally, as the spread of this AMR bacteria may lead to more challenges in the treatment of the disease cause by this bacteria.In Kenya, there has been limited genomics study that have been conducted regarding this threat of the increasing resistance of the AMR N. gonorrheae bacteria. A study which was done by [Kivata et al](https://ncbi.nlm.nih.gov/pmc/articles/PMC7517623/), there remains a critical gap in understanding the genetic determinants and the epidemiological implications of plasmid-mediated resistance in this bacteria. this project aims at addressing the gap by performing genome announcement of this genomic data collected in Kenya. specifically, we will investigate the prevalence, genetic diversity, and transmission dynamics of plasmid-borne resistance genes conferring penicillin and tetracyline resistance.
+## Methodology
+
 # Genome announcement for N. gonorrhoeae
 the sequence data for this project was obtained from NCBI SRA database, which was collected by UNITED STATES ARMY MEDICAL RESEARCH DIRECTORATE-KENYA. the accession numbers for the project are PRJNA481622 and PRJNA590515, where we fetched the data by developing a simple script;
 \\\ 
