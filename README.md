@@ -223,4 +223,113 @@ The spades_output files obtained were subjected to quality assessment using QUAS
  ![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/55115e7b-fc37-4f3e-86c4-d9edf84ed088)
 *there were observed misassemblies and mismatches
 ![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/a88a4548-e6f8-4d8b-abb4-2d37a907a6f9)
+i also used busco tool to check the completeness of the assembly. Because busco only allows one set of data to run, i had to also prepare a script that would guide it to do analysis on all of the 41 sequences.
+## Busco.sh
+\\\
+#!/bin/bash
 
+#Define the path to the SPAdes output directories and the output directory for BUSCO results
+SPADES_DIR="/mnt/g/project/data/spades.fasta/Spades_output"
+LINEAGE="neisseriales_odb10"
+OUTPUT_BASE_DIR="/mnt/g/project/data/busco_output"
+
+#Loop through each SPAdes output directory
+for dir in ${SPADES_DIR}/*_spades_output; do
+    if [ -d "$dir" ]; then
+        BASENAME=$(basename "$dir")
+        OUTPUT_DIR="${OUTPUT_BASE_DIR}/${BASENAME}"
+        CONTIGS_FILE="${dir}/contigs.fasta"
+        
+        if [ -f "$CONTIGS_FILE" ]; then
+            echo "Running BUSCO on $CONTIGS_FILE"
+            busco -i "$CONTIGS_FILE" -l "$LINEAGE" -o "$OUTPUT_DIR" -m genome -f
+        else
+            echo "contigs.fasta not found in $dir"
+        fi
+    fi
+done
+\\\
+### Bwa Alignment
+Inorder to improve the quality by correcting the mismatches and correct some gaps, developed a bwa.sh script:
+\\\
+#!/bin/bash
+
+#path to the reference genome and index it
+REFERENCE=/mnt/g/project/data/reference.fasta
+
+#Index the reference genome
+bwa index $REFERENCE
+
+#Directory containing contigs files
+CONTIGS_DIR=/mnt/g/project/data/spades.fasta/Spades_output
+
+#Output directory for SAM and BAM files
+OUTPUT_DIR=/mnt/g/project/data/alignment_output
+
+#Create output directory if it doesn't exist
+mkdir -p $OUTPUT_DIR
+
+Loop through each contigs.fasta file and perform alignment
+  for contigs in $CONTIGS_DIR/*/contigs.fasta; do
+    #Extract the base name (e.g., SRR10491521)
+    BASENAME=$(basename $(dirname $contigs))
+
+    #SAM and BAM files outputs
+    OUTPUT_SAM=$OUTPUT_DIR/${BASENAME}_aligned.sam
+    OUTPUT_BAM=$OUTPUT_DIR/${BASENAME}_aligned.bam
+
+    #Run BWA MEM
+    bwa mem $REFERENCE $contigs > $OUTPUT_SAM
+    echo "Alignment complete for $contigs. Output saved to $OUTPUT_SAM."
+
+    #Convert SAM to BAM
+    samtools view -S -b $OUTPUT_SAM > $OUTPUT_BAM
+    echo "Converted $OUTPUT_SAM to $OUTPUT_BAM"
+
+    #Sort the BAM file
+    samtools sort $OUTPUT_BAM -o ${OUTPUT_BAM%.bam}_sorted.bam
+    echo "Sorted BAM file saved to ${OUTPUT_BAM%.bam}_sorted.bam"
+done
+
+-This script helped in doing the following
+
+*Index the reference genome.
+
+*Align each contigs.fasta to the reference genome.
+
+*Convert the resulting SAM files to BAM files.
+
+*Sort the BAM files.
+
+the sorted file were then indexed using indexing.sh script which converted the _sorted.bam files to _sorted.bam.bai files, because pilon allows input of indexed bam files (.bai) for the cleaning protocal.
+### indexing.sh
+\\\
+#!/bin/bash
+
+#Set the base directory where your sorted BAM files are located
+BASE_DIR="/mnt/g/project/data/alignment_output"
+
+#Check if samtools is available
+if ! command -v samtools &> /dev/null; then
+    echo "samtools not found. Please make sure samtools is installed and accessible in your PATH."
+    exit 1
+fi
+
+#Change to the base directory
+cd "$BASE_DIR" || exit
+
+#Index each sorted BAM file
+for bam_file in *_sorted.bam; do
+    if [ -f "$bam_file" ]; then
+        echo "Indexing $bam_file ..."
+        samtools index "$bam_file"
+    else
+        echo "No sorted BAM files (*_sorted.bam) found in $BASE_DIR"
+        exit 1
+    fi
+done
+
+echo "Indexing complete."
+\\\
+
+The output files from pilon_output were then subjected to quast to check their quality, using a quast script named before.there was net improvement of the quality per assembly, because the gaps and mismatch erros were corrected during bwa alignment.
