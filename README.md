@@ -183,3 +183,44 @@ done
 \\\
 
 after trimming, we rechecked the quality of the reads again to check whether the trimming was effective,
+![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/e83fee8e-7429-4bc8-a8e9-c8c2b6ebbda7)
+![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/29c44829-7f4c-41d3-af9f-88d2cff85cb0)
+## genome assembly
+using SPADES (St. Petersburg genome assembler) i did de novo assembly of the reads (81 reads) which gave me out put of 41 fasta files. to do this i developed a script which helped me to do spades on each individual pair of files, to be able to obtain 41 contigs. the script used was constructed as follows:
+### spades.sh
+\\\
+#!/bin/bash
+
+#Input and output directories
+INPUT_DIR="/home/wmbinda/Trimmed_initial"
+OUTPUT_DIR="/home/wmbinda/Spades_output"
+
+#Create the output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+#Loop through each pair of files
+for forward_read in "$INPUT_DIR"/*_1.trimmed.fastq
+do
+    #Check if there are corresponding reverse reads
+    reverse_read="${forward_read/_1/_2}"
+
+    if [ -f "$reverse_read" ]; then
+        # Extract base filenames without extension
+        base=$(basename "$forward_read" _1.trimmed.fastq)
+
+        #Run SPAdes for each pair
+        spades.py --pe1-1 "$forward_read" --pe1-2 "$reverse_read" --only-assembler -o "${OUTPUT_DIR}/${base}_spades_output"
+    else
+        echo "Reverse read not found for $forward_read"
+    fi
+done
+
+echo "All SPAdes runs completed."
+\\\
+
+The spades_output files obtained were subjected to quality assessment using QUAST tool, and a reference genome fasta file to counter check and compare the quality against our obtained assembly. syntax used : quast.py -r ../../GCF_013030075.1_ASM1303007v1_genomic.fna ./*_spades_output/contigs.fasta. The report which was obtained could be summarised as follows
+* there were gaps in the contigs
+ ![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/55115e7b-fc37-4f3e-86c4-d9edf84ed088)
+*there were observed misassemblies and mismatches
+![image](https://github.com/kiema2001/Neisseria-gonorrheae/assets/173713662/a88a4548-e6f8-4d8b-abb4-2d37a907a6f9)
+
